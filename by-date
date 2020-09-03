@@ -1,0 +1,101 @@
+import urllib.request
+from datetime import datetime
+import os
+os.system('clear')
+
+banner_M = '''
+\033[1m
+M""""""""M MM'"""""`MM MM"""""""`YM dP       oo                dP
+Mmmm  mmmM M' .mmm. `M MM  mmmmm  M 88                         88
+MMMM  MMMM M  MMMMMMMM M'        .M 88d888b. dP 88d888b. .d888b88
+MMMM  MMMM M  MMM   `M MM  MMMMMMMM 88'  `88 88 88'  `88 88'  `88
+MMMM  MMMM M. `MMM' .M MM  MMMMMMMM 88    88 88 88    88 88.  .88
+MMMM  MMMM MM.     .MM MM  MMMMMMMM dP    dP dP dP    dP `88888P8
+MMMMMMMMMM MMMMMMMMMMM MMMMMMMMMMMM 
+
+'''
+banner_a = """
+##    ## #### ##    ## ########  ####  ######   ######  ##     ## 
+###   ##  ##  ##   ##  ##     ##  ##  ##    ## ##    ## ##     ## 
+####  ##  ##  ##  ##   ##     ##  ##  ##       ##       ##     ## 
+## ## ##  ##  #####    ##     ##  ##   ######   ######  ##     ## 
+##  ####  ##  ##  ##   ##     ##  ##        ##       ##  ##   ##  
+##   ###  ##  ##   ##  ##     ##  ##  ##    ## ##    ##   ## ##   
+##    ## #### ##    ## ########  ####  ######   ######     ###    """
+print(banner_M)
+print('\n' + banner_a)
+
+	
+		
+while 1:
+	try:
+		d = input("Введите день (01): ")
+		d = int(d)
+		if d > 31:
+			d = 1
+
+	except Exception:
+		d = 1
+	try:
+		m = input("Введите месяц (01): ")
+		m = int(m)
+	except Exception:
+		m = 1
+	break
+
+while 1:
+	try:
+		fer = input('Введите кол-во допустимых ошибок (3): ')
+		fer = int(fer) - 1
+	except Exception:
+		fer = 2
+	break
+	
+link = 'http://telegra.ph/'
+mainvar = str(m).rjust(2, '0') + '-' + str(d).rjust(2, '0')
+
+ff = open(str(m) + '-' + str(d) + '.txt', 'a')
+
+num = 2
+er = 0
+rs = '\033[0m'
+f = '\033[32mНашло!: '
+
+print('\n' + str(datetime.today()) + '\n')
+
+while 1:
+	link = 'http://telegra.ph/'
+	req = link + '-' + str(m).rjust(2, '0') + '-' + str(d).rjust(2, '0') + '-' + str(num)
+	try:
+		response = urllib.request.urlopen(req)
+		print(f + req + '\033[34m\033[1m ' + str(response.getcode()) + rs)
+		ff.write('\n' + req + '\n')
+	
+		
+		link = 'http://te.legra.ph/'
+		while 1:
+			req = link + '-' + str(m).rjust(2, '0') + '-' + str(d).rjust(2, '0') + '-' + str(num)
+			try:
+				response = urllib.request.urlopen(req)
+				print(f + req + '\033[34m\033[1m ' + str(response.getcode()) + rs)
+				ff.write('\n' + req + '\n')
+				
+				break
+			except Exception as e:
+				print('Ошибка:' + str(e) + ' ' + req)
+				break
+			
+	except Exception as e:
+		print('Ошибка:' + str(e) + ' ' + req)
+		if er < fer:
+			print('\033[34mПопробуем ещё раз...' + rs)
+			
+			er += 1
+		else:
+			break
+	num += 1
+			
+ff.write('\n')
+ff.close()
+
+print('\n' + str(datetime.today()) + '\n')
