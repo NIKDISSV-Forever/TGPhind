@@ -98,13 +98,13 @@ while d <= 31:
 		else:
 			break
 
-f.close()
-f = open(fname, 'r')
-ftxt = f.read()
+ff.close()
+ff = open(fname, 'r')
+ftxt = ff.read()
 ftxt = ftxt.replace('''
 http://te.legra.ph/''', 'http://te.legra.ph/').replace('''
 http://graph.org''', 'http://graph.org')
-f.write(ftxt)
+ff.write(ftxt)
 f.close()		
 ff.write('\n')
 ff.close()
