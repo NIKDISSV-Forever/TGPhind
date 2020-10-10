@@ -106,16 +106,18 @@ def mor(glnk):
 			break
 		else:
 			fi.write(f'\n{lnk}\n')
+			global found
+			found += 1
 			if use0:
 				lnkm = glnk.replace(mlnk, lnk0) + '\n'
 				fi.write(f'\n{lnkm}')
+				global found
+				found += 1
 			if use1:
 				lnkm = glnk.replace(mlnk, lnk1) + '\n\n'
 				fi.write(f'\n{lnkm}')
-	try:
-		whilesort()
-	except:
-		pass
+				global found
+				found += 1
 
 
 
@@ -135,6 +137,8 @@ def main_search(mm, dd):
 					try:
 						with open(f'{srch}.txt', 'a') as f:
 							f.write(f'{lnk}\n')
+							global found
+							found += 1
 						break
 					except:
 						pass
@@ -144,6 +148,8 @@ def main_search(mm, dd):
 						try:
 							with open(f'{srch}.txt', 'a') as f:
 								f.write(lnkm)
+								global found
+								found += 1
 							break
 						except:
 							pass
@@ -153,6 +159,8 @@ def main_search(mm, dd):
 						try:
 							with open(f'{srch}.txt', 'a') as f:
 								f.write(lnkm)
+								global found
+								found += 1
 							break
 						except:
 							pass
@@ -165,12 +173,8 @@ def main_search(mm, dd):
 	except Exception as er:
 		print(er)
 
-	try:
-		whilesort()
-	except:
-		pass
-
-	
+global found
+found = 0
 if __name__ == '__main__':
 	print('\033[34mДождитесь окончантя поиска!')
 	for mm in range(1, 13):
@@ -182,3 +186,14 @@ if __name__ == '__main__':
 					break
 				except:
 					pass
+
+
+ishav = 0
+while ishav != found:
+	with open(f'{srch}.txt', 'r') as f:
+		ishav = 0
+		for i in f:
+			ishav += 1
+
+whilesort()
+	
