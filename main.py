@@ -79,13 +79,6 @@ else:
 
 del(lnkss)
 
-with open(f'{srch}.txt', 'a') as f:
-	for lin in sorted(ll):
-		if lin[:7] == 'http://':
-			f.write(lin)
-		else:
-			pass
-
 def mor(glnk):
 	n = 2
 	fi = open(f'{srch}.txt', 'a')
