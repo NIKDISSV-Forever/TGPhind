@@ -2,6 +2,8 @@ print('\033[0m')
 from transcript import transcript
 from sys import argv
 from os import system
+system('git pull')
+system('clear')
 from threading import Thread
 try:
 	import requests
@@ -10,7 +12,7 @@ except ModuleNotFoundError:
 	import requests
 
 if len(argv) <= 1:
-	print('Использование:\n $ tgphind [Запрос]')
+	print('Использование:\n $ python main.py [Запрос]')
 	preus = input('Введите запрос сюда: ')
 else:
 	preus = ' '.join(argv[1:])
