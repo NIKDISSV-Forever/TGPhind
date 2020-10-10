@@ -76,8 +76,24 @@ if use1:
 	print(lnkss[1], '- Работает нормально.')
 else:
 	print(lnkss[1], '- Не работает.')
-	
+
 del(lnkss)
+
+def whilesort():
+	ll = []
+	with open(f'{srch}.txt', 'r') as f:
+		for i in f:
+			ll.append(i)
+	with open(f'{srch}.txt', 'w') as f:
+		f.write('')
+
+with open(f'{srch}.txt', 'a') as f:
+	for lin in sorted(ll):
+		if lin[:7] == 'http://':
+			f.write(lin)
+		else:
+			pass
+
 def mor(glnk):
 	n = 2
 	fi = open(f'{srch}.txt', 'a')
@@ -96,6 +112,10 @@ def mor(glnk):
 			if use1:
 				lnkm = glnk.replace(mlnk, lnk1) + '\n\n'
 				fi.write(f'\n{lnkm}')
+	try:
+		whilesort()
+	except:
+		pass
 
 
 
@@ -145,6 +165,11 @@ def main_search(mm, dd):
 	except Exception as er:
 		print(er)
 
+	try:
+		whilesort()
+	except:
+		pass
+
 	
 if __name__ == '__main__':
 	print('\033[34mДождитесь окончантя поиска!')
@@ -157,19 +182,3 @@ if __name__ == '__main__':
 					break
 				except:
 					pass
-
-
-ll = []
-with open(f'{srch}.txt', 'r') as f:
-	for i in f:
-		ll.append(i)
-with open(f'{srch}.txt', 'w') as f:
-	f.write('')
-
-with open(f'{srch}.txt', 'a') as f:
-	for lin in sorted(ll):
-		if lin[:7] == 'http://':
-			f.write(lin)
-		else:
-			pass
-print('\033[0m')
