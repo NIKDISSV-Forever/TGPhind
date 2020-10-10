@@ -156,3 +156,6 @@ if __name__ == '__main__':
 					break
 				except:
 					pass
+
+with open('result', 'w') as f:
+	f.write(f'{srch}.txt')
