@@ -2,8 +2,7 @@ print('\033[0m')
 from transcript import transcript
 from sys import argv
 from os import system
-system('git pull')
-system('clear')
+system('git pull; clear')
 from threading import Thread
 try:
 	import requests
@@ -12,7 +11,7 @@ except ModuleNotFoundError:
 	import requests
 
 if len(argv) <= 1:
-	print('Использование:\n $ python main.py [Запрос]')
+	print('Использование:\n $ python', + argv[0], '[Запрос]')
 	preus = input('Введите запрос сюда: ')
 else:
 	preus = ' '.join(argv[1:])
@@ -36,18 +35,20 @@ use1 = False
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
 try:
-	m0 = requests.get(mlnk, headers=headers)
+	m = requests.get(mlnk, headers=headers)
+	print(mlnk, m)
 except Exception as no:
 	print(no)
 	exit()
 else:
-	if m0.status_code >= 100 and m0.status_code <= 400:
+	if m.status_code >= 100 and m.status_code <= 400:
 		pass
 	else:
 		exit()
 
 try:
 	m = requests.get(lnk0, headers=headers)
+	print(lnk0, m)
 except Exception as no:
 	print(no)
 	use0 = False
@@ -56,6 +57,7 @@ else:
 		use0 = True
 try:
 	m = requests.get(lnk1, headers=headers)
+	print(lnk1, m)
 except Exception as no:
 	print(no)
 	use1 = False
