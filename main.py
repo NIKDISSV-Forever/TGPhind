@@ -79,14 +79,6 @@ else:
 
 del(lnkss)
 
-def whilesort():
-	ll = []
-	with open(f'{srch}.txt', 'r') as f:
-		for i in f:
-			ll.append(i)
-	with open(f'{srch}.txt', 'w') as f:
-		f.write('')
-
 with open(f'{srch}.txt', 'a') as f:
 	for lin in sorted(ll):
 		if lin[:7] == 'http://':
@@ -106,18 +98,12 @@ def mor(glnk):
 			break
 		else:
 			fi.write(f'\n{lnk}\n')
-			global found
-			found += 1
 			if use0:
 				lnkm = glnk.replace(mlnk, lnk0) + '\n'
 				fi.write(f'\n{lnkm}')
-				global found
-				found += 1
 			if use1:
 				lnkm = glnk.replace(mlnk, lnk1) + '\n\n'
 				fi.write(f'\n{lnkm}')
-				global found
-				found += 1
 
 
 
@@ -137,8 +123,6 @@ def main_search(mm, dd):
 					try:
 						with open(f'{srch}.txt', 'a') as f:
 							f.write(f'{lnk}\n')
-							global found
-							found += 1
 						break
 					except:
 						pass
@@ -148,8 +132,6 @@ def main_search(mm, dd):
 						try:
 							with open(f'{srch}.txt', 'a') as f:
 								f.write(lnkm)
-								global found
-								found += 1
 							break
 						except:
 							pass
@@ -159,8 +141,6 @@ def main_search(mm, dd):
 						try:
 							with open(f'{srch}.txt', 'a') as f:
 								f.write(lnkm)
-								global found
-								found += 1
 							break
 						except:
 							pass
@@ -172,11 +152,8 @@ def main_search(mm, dd):
 			print(Err)
 	except Exception as er:
 		print(er)
-
-global found
-found = 0
 if __name__ == '__main__':
-	print('\033[34mДождитесь окончантя поиска!')
+	print('\033[34mДождитесь окончантя поиска!\nИ введите коммманду python file-sort.py')
 	for mm in range(1, 13):
 		for dd in range(1, 32):
 			while 1:
@@ -186,14 +163,3 @@ if __name__ == '__main__':
 					break
 				except:
 					pass
-
-
-ishav = 0
-while ishav != found:
-	with open(f'{srch}.txt', 'r') as f:
-		ishav = 0
-		for i in f:
-			ishav += 1
-
-whilesort()
-	
