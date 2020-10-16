@@ -11,7 +11,7 @@ except ModuleNotFoundError:
 	import requests
 
 if len(argv) <= 1:
-	print('Использование:\n $ python', + argv[0], '[Запрос]')
+	print('Использование:\n $ python', argv[0], '[Запрос]')
 	preus = input('Введите запрос сюда: ')
 else:
 	preus = ' '.join(argv[1:])
