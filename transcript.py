@@ -1,6 +1,6 @@
 #Если удалить этот файл, вам нужно будет будет:
 #В файле by-name...
-#1) Удалить строку 2 (import transcript as mrt) и 42 (		rurl = mrt.transcript(rurl)) (или поставить перед строкой '#')
+#1) Удалить строку 2 (from transcript import transcript) и 42 (		rurl = mrt.transcript(rurl)) (или поставить перед строкой '#')
 #2) Предаётся вводить запрос транскрипцией.
 
 def transcript(rurl):
