@@ -83,7 +83,7 @@ def mor(glnk):
 	while 1:
 		lnk = f'{glnk}-{n}'
 		g = requests.get(lnk)
-		stdout.write('\033[34m' + lnk + str(g) + '\n')
+		stdout.write('\033[34m' + lnk + ' ' + str(g) + '\n')
 		n += 1
 		if g.status_code >= 300:
 			break
