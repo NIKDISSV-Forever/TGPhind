@@ -1,3 +1,5 @@
+# -*- Coding: UTF-8 -*-
+
 from threading import Thread
 from os import system, name
 from sys import argv, stdout
