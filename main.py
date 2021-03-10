@@ -1,218 +1,201 @@
-# -*- Coding: UTF-8 -*-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
+__banner__ = (
+    """
+
+  _____ ____ ____  _     _           _ 
+ |_   _/ ___|  _ \| |__ (_)_ __   __| |
+   | || |  _| |_) | '_ \| | '_ \ / _` |
+   | || |_| |  __/| | | | | | | | (_| |
+   |_| \____|_|   |_| |_|_|_| |_|\__,_|
+                                       
+
+    """
+)
+
+from urllib.request import urlopen
+from typing import Union, List, Tuple, Dict
+from sys import argv
 from threading import Thread
-from os import system, name
-from sys import argv, stdout
-
-try:
-    import requests
-except ModuleNotFoundError:
-    system('pip install requests')
-    import requests
-
-stdout.write('\033[0m')
-system("git pull")
-system("cls" if name == "nt" else "clear")
+from string import punctuation
+from os import mkdir, remove
+from os.path import exists
 
 
-def transcript(rurl):
-    rurl = rurl.lower()
-    rurl = rurl.replace(' ', '-')
+__author__ = "NIKDISSV"
 
-# Буквы русского алфавита:
-    rurl = rurl.replace('а', 'a')
-    rurl = rurl.replace('б', 'b')
-    rurl = rurl.replace('в', 'v')
-    rurl = rurl.replace('г', 'g')
-    rurl = rurl.replace('д', 'd')
-    rurl = rurl.replace('е', 'e')
-    rurl = rurl.replace('ё', 'yo')
-    rurl = rurl.replace('ж', 'zh')
-    rurl = rurl.replace('з', 'z')
-    rurl = rurl.replace('и', 'i')
-    rurl = rurl.replace('й', 'j')
-    rurl = rurl.replace('к', 'k')
-    rurl = rurl.replace('л', 'l')
-    rurl = rurl.replace('м', 'm')
-    rurl = rurl.replace('н', 'n')
-    rurl = rurl.replace('о', 'o')
-    rurl = rurl.replace('п', 'p')
-    rurl = rurl.replace('р', 'r')
-    rurl = rurl.replace('с', 's')
-    rurl = rurl.replace('т', 't')
-    rurl = rurl.replace('у', 'u')
-    rurl = rurl.replace('ф', 'f')
-    rurl = rurl.replace('х', 'h')
-    rurl = rurl.replace('ц', 'c')
-    rurl = rurl.replace('ч', 'ch')
-    rurl = rurl.replace('ш', 'sh')
-    rurl = rurl.replace('щ', 'shch')
-    rurl = rurl.replace('ъ', '')
-    rurl = rurl.replace('ы', 'y')
-    rurl = rurl.replace('ь', '')
-    rurl = rurl.replace('э', 'eh')
-    rurl = rurl.replace('ю', 'yu')
-    rurl = rurl.replace('я', 'ya')
+TRANSCRIPT_DICT = dict(zip(
+    ("а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я "
+     + " ".join(punctuation)).split(" "),
+    ("a b v g d e yo zh z i j k l m n o p r s t y f h c ch sh shch  y  eh yu ya "
+         + " "*len(punctuation)).split(" ")))
+TRANSCRIPT_DICT[" "] = "-"
 
-# Символы:
-    rurl = rurl.replace('!', '')
-    rurl = rurl.replace('?', '')
-    rurl = rurl.replace(',', '')
-    rurl = rurl.replace('.', '')
-    rurl = rurl.replace('*', '')
-    rurl = rurl.replace('_', '')
+SITES = ["https://telegra.ph/", "https://te.legra.ph/", "https://graph.org/"]
 
-    return rurl
-
-
-if len(argv) <= 1:
-    stdout.write('Использование:\n $ python ' + str(argv[0]) + ' [Запрос]\n')
-    preus = input('Введите запрос сюда: ')
-else:
-    preus = ' '.join(argv[1:])
-
-global use0, use1, lnkss, mlnk, lnk0, lnk1, srch
-
-srch = transcript(preus)
-stdout.write(f'Запрос: {srch}\n')
-
-
-stdout.write('Проверка зеркал...\n\n')
-
-lnkss = ['http://te.legra.ph/', 'http://graph.org/', 'http://telegra.ph/']
-lnk0 = lnkss[0]
-lnk1 = lnkss[1]
-mlnk = lnkss[2]
-
-use0 = False
-use1 = False
-
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-
-try:
-    m = requests.get(mlnk, headers=headers)
-    stdout.write(mlnk + ' ' + str(m) + '\n')
-except Exception as no:
-    stdout.write(str(no) + '\n')
-    exit()
-else:
-    if not (m.status_code >= 100 and m.status_code <= 400):
-        exit()
-
-try:
-    m = requests.get(lnk0, headers=headers)
-    stdout.write(lnk0 + ' ' + str(m) + '\n')
-except Exception as no:
-    stdout.write(str(no) + '\n')
-    use0 = False
-else:
-    if m.status_code >= 100 and m.status_code <= 400:
-        use0 = True
-try:
-    m = requests.get(lnk1, headers=headers)
-    stdout.write(lnk1 + ' ' + str(m) + '\n')
-except Exception as no:
-    stdout.write(str(no) + '\n')
-    use1 = False
-else:
-    if m.status_code >= 100 and m.status_code <= 400:
-        use1 = True
-
-stdout.write('Проверка завершена, мой вердикт:\n\n')
-
-if use0:
-    stdout.write(lnkss[0] + ' - Работает нормально.\n')
-else:
-    stdout.write(lnkss[0] + ' - Не работает.\n')
-
-if use1:
-    stdout.write(lnkss[1] + ' - Работает нормально.\n')
-else:
-    stdout.write(lnkss[1] + ' - Не работает.\n')
-
-del(lnkss)
-
-
-def mor(glnk):
-    n = 2
-    fi = open(f'{srch}.txt', 'a')
-    while 1:
-        lnk = f'{glnk}-{n}'
-        g = requests.get(lnk)
-        stdout.write('\033[34m' + lnk + ' ' + str(g) + '\n')
-        n += 1
-        if g.status_code >= 300:
-            break
-        else:
-            fi.write(f'\n{lnk}\n')
-            if use0:
-                lnkm = glnk.replace(mlnk, lnk0) + '\n'
-                fi.write(f'\n{lnkm}')
-            if use1:
-                lnkm = glnk.replace(mlnk, lnk1) + '\n\n'
-                fi.write(f'\n{lnkm}')
-
-
-def main_search(mm, dd):
+for url in SITES[1:]:
     try:
-        try:
-            mm = str(mm).rjust(2, '0')
-            dd = str(dd).rjust(2, '0')
-            lnk = f'{mlnk}{srch}-{mm}-{dd}'
-            g = requests.get(lnk)
-            if g.status_code <= 300:
-                col = '\033[32m'
-                glnk = lnk
-                stdout.write(col + lnk + ' ' + str(g) + '\n')
-                mor(glnk)
-                while 1:
-                    try:
-                        with open(f'{srch}.txt', 'a') as f:
-                            f.write(f'{lnk}\n')
-                        break
-                    except:
-                        pass
-                if use0:
-                    lnkm = glnk.replace(mlnk, lnk0) + '\n'
-                    while 1:
-                        try:
-                            with open(f'{srch}.txt', 'a') as f:
-                                f.write(lnkm)
-                            break
-                        except:
-                            pass
-                if use1:
-                    lnkm = glnk.replace(mlnk, lnk1) + '\n\n'
-                    while 1:
-                        try:
-                            with open(f'{srch}.txt', 'a') as f:
-                                f.write(lnkm)
-                            break
-                        except:
-                            pass
+        resp = urlopen(url)
+    except Exception as Error:
+        SITES.remove(url)
+        print(url, Error)
+    else:
+        print(url, resp.getcode())
+
+
+class TGPhind:
+
+    MM = range(1, 13)
+    DD = range(1, 32)
+
+    FOUND_DIR = "found"
+
+    def __init__(self, args: Union[List[str], Tuple[str]]) -> None:
+
+        args = self._argParse(args)
+
+        if len(args) <= 1:
+            print(f"Usage: python {argv[0]} query -PARAMS")
+            self.query = self.Get_Query()
+        else:
+            self.query = " ".join(args[1:])
+        self.query = self.transcript(self.query)
+
+        if not exists(self.FOUND_DIR):
+            mkdir(self.FOUND_DIR)
+
+        fileN = f"{self.FOUND_DIR}/{self.query}.txt"
+        if exists(fileN):
+            try:
+                remove(fileN)
+            except Exception as Error:
+                print(Error)
+
+        self.file_handle = open(fileN, "a")
+
+        self.Start_Search()
+
+    def transcript(self,
+                   text: str = "",
+                   table: Dict[str, str] = TRANSCRIPT_DICT,
+                   lowered: bool = True) -> str:
+        text = str(text).lower() if lowered else str(text)
+        table = dict(table)
+        for i in table:
+            if i in text:
+                text = text.replace(i, table[i])
+        return text
+
+    def Get_Query(self) -> str:
+
+        while True:
+            query = input("Enter your search term: ").strip().lower()
+            if query:
+                break
             else:
-                col = '\033[31m'
-                stdout.write(col + lnk + ' ' + str(g) + '\n')
+                print("The line is empty!")
+        return query
 
-        except Exception as Err:
-            stdout.write(str(Err) + '\n')
-    except Exception as er:
-        stdout.write(str(er) + '\n')
+    def Start_Search(self) -> None:
+
+        info = f"Query: {self.query} | MM: {self.MM[-1]} DD: {self.DD[-1]} | Found in: {self.FOUND_DIR}"
+        print(info)
+
+        for mm in self.MM:
+            for dd in self.DD:
+                mm, dd = str(mm).rjust(2, "0"), str(dd).rjust(2, "0")
+                t = Thread(target=self.Search, args=(mm, dd))
+                t.start()
+
+    def Search(self,
+               mm: Union[str, int], dd: Union[str, int], n: str = "") -> None:
+
+        suf = f"{self.query}-{mm}-{dd}{n}"
+        url = f"{SITES[0]}{suf}"
+
+        try:
+            resp = urlopen(url, )
+        except Exception as Error:
+            resp = Error
+        code = resp.getcode()
+        if code < 400:
+            self.file_handle.write(url+"\n")
+            for u in SITES[1:]:
+                self.file_handle.write(f"{u}{suf}\n")
+            self.Search(mm, dd, n=int(n)-1 if n else "-2")
+        print(url, code)
+
+    def _argParse(self, args: Union[List[str], Tuple[str]] = []) -> list:
+
+        args = list(map(str.lower, args))
+        if "-mm" in args:
+            try:
+                i = args.index("-mm")
+                mm = args[i+1]
+                args.remove(args[i])
+                args.remove(args[i])
+                mm = tuple(map(int, mm.split("-")))
+                if self.valid_date(mm, "m", True):
+                    self.MM = range(*mm)
+            except Exception as Error:
+                print(Error)
+        if "-dd" in args:
+            try:
+                i = args.index("-dd")
+                dd = args[i+1]
+                args.remove(args[i])
+                args.remove(args[i])
+                dd = tuple(map(int, dd.split("-")))
+                if self.valid_date(dd, "m", True):
+                    self.DD = range(*dd)
+            except Exception as Error:
+                print(Error)
+        if "-fd" in args:
+            try:
+                i = args.index("-fd")
+                fd = args[i+1]
+                args.remove(args[i])
+                args.remove(args[i])
+                self.FOUND_DIR = fd
+            except Exception as Error:
+                print(Error)
+        return args
+
+    def valid_date(self,
+                   data: Union[List[int], Tuple[int, int]],
+                   dtype: str,
+                   out: bool = True) -> bool:
+
+        dtype = dtype.lower().strip()
+        if "m" in dtype:
+            valid = range(1, 13)
+        elif "d" in dtype:
+            valid = range(1, 32)
+        else:
+            return False
+
+        try:
+            return ((int(data[0]) in valid) and (int(data[-1]) in valid))
+        except Exception as Error:
+            if out:
+                print(Error)
+
+    def __del__(self) -> None:
+        try:
+            with open(self.file_handle.name) as f:
+                urls = f.read().split("\n")
+            with open(self.file_handle.name, "w") as f:
+                f.write("\n".join(sorted(urls)))
+            self.file_handle.close()
+        except Exception as Error:
+            print(Error)
 
 
-if __name__ == '__main__':
-    stdout.write(
-        '\033[34mДождитесь окончантя поиска!\nИ введите коммманду python file-sort.py\n')
-    for mm in range(1, 13):
-        for dd in range(1, 32):
-            while 1:
-                try:
-                    thrd = Thread(target=main_search, args=(mm, dd))
-                    thrd.start()
-                    break
-                except:
-                    pass
+if __name__ == "__main__":
 
-with open('result', 'w') as f:
-    f.write(f'{srch}.txt')
+    from os import system, name
+    system("cls" if name == "nt" else "clear")
+    print(__banner__)
+
+    TGPhind(argv)
