@@ -1,6 +1,6 @@
 # TGPhind
 
-Find the article you need *(telegra.ph/te.legra.ph/graph.org)*
+Find the article you need *([telegra.ph](https://telegra.ph/)/[te.legra.ph](https://te.legra.ph/)/[graph.org](https://graph.org/))*
 ----------
 
 ## Установка:

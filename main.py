@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-__banner__ = (
-    """
+
+__banner__ = """
 
   _____ ____ ____  _     _           _ 
  |_   _/ ___|  _ \| |__ (_)_ __   __| |
@@ -11,29 +11,31 @@ __banner__ = (
    |_| \____|_|   |_| |_|_|_| |_|\__,_|
                                        
 
-    """
-)
-
-from urllib.request import urlopen
-from typing import Union, List, Tuple, Dict
-from sys import argv
-from threading import Thread
-from string import punctuation
-from os import mkdir, remove
-from os.path import exists
-
-
+"""
 __author__ = "NIKDISSV"
 
+
+from urllib.request import urlopen
+from threading import Thread
+
+from os import mkdir, remove
+from os.path import exists
+from sys import argv
+
+from typing import Union, List, Tuple, Dict
+from string import punctuation
+
+
+S = " "
 TRANSCRIPT_DICT = dict(zip(
     ("а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я "
-     + " ".join(punctuation)).split(" "),
+     + S.join(punctuation)).split(S),
     ("a b v g d e yo zh z i j k l m n o p r s t y f h c ch sh shch  y  eh yu ya "
-         + " "*len(punctuation)).split(" ")))
-TRANSCRIPT_DICT[" "] = "-"
+     + S*len(punctuation)).split(S)))
+TRANSCRIPT_DICT[S] = "-"
+
 
 SITES = ["https://telegra.ph/", "https://te.legra.ph/", "https://graph.org/"]
-
 for url in SITES[1:]:
     try:
         resp = urlopen(url)
@@ -42,6 +44,7 @@ for url in SITES[1:]:
         print(url, Error)
     else:
         print(url, resp.getcode())
+SITES = tuple(SITES)
 
 
 class TGPhind:
@@ -51,6 +54,8 @@ class TGPhind:
 
     FOUND_DIR = "found"
 
+    TOTAL = 0
+
     def __init__(self, args: Union[List[str], Tuple[str]]) -> None:
 
         args = self._argParse(args)
@@ -59,7 +64,7 @@ class TGPhind:
             print(f"Usage: python {argv[0]} query -PARAMS")
             self.query = self.Get_Query()
         else:
-            self.query = " ".join(args[1:])
+            self.query = S.join(args[1:])
         self.query = self.transcript(self.query)
 
         if not exists(self.FOUND_DIR):
@@ -121,6 +126,7 @@ class TGPhind:
         code = resp.getcode()
         if code < 400:
             self.file_handle.write(url+"\n")
+            self.TOTAL += 1
             for u in SITES[1:]:
                 self.file_handle.write(f"{u}{suf}\n")
             self.Search(mm, dd, n=int(n)-1 if n else "-2")
@@ -147,7 +153,7 @@ class TGPhind:
                 args.remove(args[i])
                 args.remove(args[i])
                 dd = tuple(map(int, dd.split("-")))
-                if self.valid_date(dd, "m", True):
+                if self.valid_date(dd, "d"):
                     self.DD = range(*dd)
             except Exception as Error:
                 print(Error)
@@ -182,12 +188,14 @@ class TGPhind:
                 print(Error)
 
     def __del__(self) -> None:
+
         try:
             with open(self.file_handle.name) as f:
                 urls = f.read().split("\n")
             with open(self.file_handle.name, "w") as f:
                 f.write("\n".join(sorted(urls)))
             self.file_handle.close()
+            print(f"{self.TOTAL} - Found")
         except Exception as Error:
             print(Error)
 
