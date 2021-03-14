@@ -38,12 +38,12 @@ Find the article you need *([telegra.ph](https://telegra.ph/)/[te.legra.ph](http
 
 ### cmd / PowerShell:
 
-```py main.py``` **query** *-ARGV*
+```py main.py3``` **query** *-ARGV*
 
 
 ### Linux Terminal:
 
-```python3 main.py``` **query** *-ARGV*
+```python3 main.py3``` **query** *-ARGV*
 
 ## query:
 
