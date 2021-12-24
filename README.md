@@ -1,87 +1,46 @@
-# TGPhind
+#### Documentation in Russian
 
-Find the article you need *([telegra.ph](https://telegra.ph/)/[te.legra.ph](https://te.legra.ph/)/[graph.org](https://graph.org/))*
-----------
-
-## Установка:
+> pip install [TGPhind](https://pypi.org/project/TGPhind/)
 
 
-### Linux / Termux:
+**TGPhind** - Инструмента для поиска стотей на сайте telegra.ph
 
-*Any: ```apt```, ```pkg```, ```dpkg```*
+_И его зеркалах._
 
-```apt upgrade -y && apt update -y```
+## Основной класс ```TGPhind```
 
-```apt install git python -y```
-
-```git clone https://github.com/NIKDISSV-Forever/TGPhind/```
-
-```cd TGPhind```
+```python
+MIRRORS = ['te.legra.ph', 'graph.org', 'telegra.ph']
 
 
-### Windows / MacOS:
+@dataclass
+class Proxy:
+    host: str = ''
+    protocol: str = 'https'
 
-**Python:** [Downdload](https://www.python.org/downloads/) (*Intsall PATH*)
-
-**Git:** [Download](https://git-scm.com/downloads)
-
-### cmd:
-
-```git clone https://github.com/NIKDISSV-Forever/TGPhind/```
-
-```cd TGPhind```
+    def __bool__(self): ...
 
 
+class TGPhind:
+    def __init__(self, article_name: str,
+                 MAX_TH: Any = cpu_count(),
+                 proxy: Proxy = Proxy(),
+                 BRACKETS='<>'):
+        ...
 
-## Запуск:
+    @property
+    def result(self) -> Union[tuple[str], tuple]: ...
 
+    def only_paths(self) -> tuple[str]:
+        return self.result
 
-### cmd / PowerShell:
+    def hosts_map(self, mirrors=None) -> tuple[tuple[str]]:
+        """
+        Вернёт кортеж кортежей строк
+        Со всеми возможными зеркалами этой статьи (mirrors или MIRRORS)"""
+        ...
 
-```py main.py3``` **query** *-ARGV*
-
-
-### Linux Terminal:
-
-```python3 main.py3``` **query** *-ARGV*
-
-## query:
-
-*Any text* **and** *[...]* - *For templating text*
-
-
-**exampl[e es ing]** *(Specified through any " \t\n\r\v\f")*
-
-**A search will be made for 4 options, these are**
-: "exampl", "example", "examples", "exampling"
-
-**The range of characters is indicated by _"-"_**
-
-**g[a-z]d**
-
-**any letter of the English alphabet between _g_ and _d_, _27_ options in total.**
-: 'gad', 'gbd', 'gcd', 'gd', 'gdd', 'ged', 'gfd', 'ggd', 'ghd', 'gid', 'gjd', 'gkd', 'gld', 'gmd', 'gnd', 'god', 'gpd', 'gqd', 'grd', 'gsd', 'gtd', 'gud', 'gvd', 'gwd', 'gxd', 'gyd', 'gzd'
-
-
-## -ARGV:
-
-**-mm**
-: month range *(Specified through "-")*
-
-**-dd**
-: days range *(Specified through "-")*
-
-**-fd**
-: folder with found results *(default **found**)*
-
-**-opnRes**
-: Open the file with the results.
-
-**-noOut**
-: Removes printing anything on the screen *(Except for the banner)*
-
-**-noMirrors**
-: No mirrors will be recorded. *only telegra.ph*
-
-**--**
-: Does not remove the **-** sign in transcription.
+    def test_mirrors(self):
+        """Протестировать рабочии-ли зеркала и удалить нерабочии"""
+        ...
+```
