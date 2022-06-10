@@ -5,42 +5,18 @@
 
 **TGPhind** - Инструмента для поиска стотей на сайте telegra.ph
 
-_И его зеркалах._
+# CLI
 
-## Основной класс ```TGPhind```
+> python -m TGPhind -h
+
+# Usage
 
 ```python
-MIRRORS = ['te.legra.ph', 'graph.org', 'telegra.ph']
+from TGPhind import TGPhind, Proxy
 
-
-@dataclass
-class Proxy:
-    host: str = ''
-    protocol: str = 'https'
-
-    def __bool__(self): ...
-
-
-class TGPhind:
-    def __init__(self, article_name: str,
-                 MAX_TH: Any = cpu_count(),
-                 proxy: Proxy = Proxy(),
-                 BRACKETS='<>'):
-        ...
-
-    @property
-    def result(self) -> Union[tuple[str], tuple]: ...
-
-    def only_paths(self) -> tuple[str]:
-        return self.result
-
-    def hosts_map(self, mirrors=None) -> tuple[tuple[str]]:
-        """
-        Вернёт кортеж кортежей строк
-        Со всеми возможными зеркалами этой статьи (mirrors или MIRRORS)"""
-        ...
-
-    def test_mirrors(self):
-        """Протестировать рабочии-ли зеркала и удалить нерабочии"""
-        ...
+se = TGPhind(MAX_TH: int = None,
+                           proxy: Proxy = None,
+                                          brackets = '<>')
+print(*se.map_hosts(se.search('article<s>-<a-d>')), sep='\n')
+# query = (article-a, article-b, article-c, article-d, articles-a, articles-b, articles-c, articles-d)
 ```

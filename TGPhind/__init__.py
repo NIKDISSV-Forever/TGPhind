@@ -1,15 +1,17 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from http.client import HTTPResponse
 from multiprocessing import cpu_count
+from multiprocessing.pool import ThreadPool
 from string import punctuation
-from threading import Thread
-from typing import Any, Iterator, Union
+from typing import Iterator
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
-from .Parser import *
+from TGPhind.Parser import *
 
-__all__ = ('TRANSCRIPT', 'TGPhind', 'MIRRORS', 'set_mirrors', 'set_brackets', 'Proxy')
+__all__ = ('TRANSCRIPT', 'TGPhind', 'MIRRORS', 'Proxy')
 
 TRANSCRIPT = str.maketrans(
     {
@@ -22,7 +24,8 @@ TRANSCRIPT = str.maketrans(
         'э': 'eh', 'ю': 'yu', 'я': 'ya', ' ': '-'
     } | {i: '' for i in punctuation.replace(' ', '')})
 
-MONTH = 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+MONTH = (31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+MIRRORS = ['te.legra.ph', 'graph.org', 'telegra.ph']
 
 
 @dataclass
@@ -34,56 +37,28 @@ class Proxy:
         return bool(self.host and self.protocol)
 
 
-MIRRORS = ['te.legra.ph', 'graph.org', 'telegra.ph']
-
-
-def set_mirrors(to):
-    global MIRRORS
-    MIRRORS = [str(i) for i in to]
-
-
 class TGPhind:
-    def __init__(self, article_name: str,
-                 MAX_TH: Any = cpu_count(),
-                 proxy: Proxy = Proxy(),
-                 BRACKETS='<>'):
-        self.article_name = article_name
-        self.MAX_TH = MAX_TH
-        self.proxy = proxy
-        set_brackets(BRACKETS)
+    def __init__(self, MAX_TH: int = None,
+                 proxy: Proxy = None,
+                 brackets='<>'):
+        self.MAX_TH = MAX_TH or cpu_count()
+        self.proxy = Proxy() if proxy is None else proxy
+        self.brackets = brackets
 
-    @property
-    def result(self) -> Union[tuple[str], tuple]:
-        if not hasattr(self, '__result'):
-            self.start(parse(self.article_name))
-        return self.__result
+    def search(self, template: str) -> tuple[str] | tuple:
+        return self.search_iter(parse(template, self.brackets))
 
-    def only_paths(self) -> tuple[str]:
-        return self.result
-
-    def hosts_map(self, mirrors=None) -> tuple[tuple[str]]:
-        if mirrors is None:
-            mirrors = MIRRORS
-        protocol = self.proxy.protocol
-        return tuple(tuple(join(protocol, host, path) for host in mirrors) for path in self.result)
-
-    def start(self, names: Iterator[str]):
+    def search_iter(self, names: Iterator[str]) -> tuple[str] | tuple:
         self.__result = ()
-        names = tuple(name.lower().translate(TRANSCRIPT) for name in names)
-        threads = ()
-        MAX_TH = self.MAX_TH
+        args = ()
+        names = (*(name.lower().translate(TRANSCRIPT) for name in names),)
         for m in range(1, 13):
             for d in range(1, MONTH[m - 1] + 1):
                 for name in names:
-                    th = Thread(target=self.__handle, args=(name, m, d))
-                    th.start()
-                    threads += th,
-                    if len(threads) == MAX_TH:
-                        for th in threads:
-                            th.join()
-                        threads = ()
-        for th in threads:
-            th.join()
+                    args += (name, m, d),
+        with ThreadPool(self.MAX_TH) as pool:
+            pool.starmap(self.__handle, args)
+        return *sorted(self.__result),
 
     def test_mirrors(self):
         for host in MIRRORS:
@@ -93,10 +68,9 @@ class TGPhind:
                 MIRRORS.remove(host)
 
     def __handle(self, name: str, m: int, d: int, n: int = 0):
-        path = f'{name}-{m}-{d}'
+        path = f'{name}-{m:0>2}-{d:0>2}'
         if n:
             path += f'-{n}'
-            n += 1
         try:
             self.urlopen(path)
             self.__result += path,
@@ -113,7 +87,16 @@ class TGPhind:
             host = MIRRORS[0]
         proxy = self.proxy
         protocol = proxy.protocol
-        req = Request(join(protocol, host, path))
+        req = Request(join(protocol, host, path), headers={
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                          'Chrome/102.0.0.0 Safari/537.36'})
         if proxy:
             req.set_proxy(proxy.host, protocol)
-        return urlopen(req, timeout=2.5)
+        return urlopen(req, timeout=5.)
+
+    def map_hosts(self, results: tuple[str] = (), protocol: str = None, test_mirrors: bool = True) -> tuple[tuple[str]]:
+        if test_mirrors:
+            self.test_mirrors()
+        if not protocol:
+            protocol = self.proxy.protocol
+        return *((*(join(protocol, host, name) for host in MIRRORS),) for name in results),
