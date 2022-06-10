@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Iterator
 
 __all__ = 'parse', 'join'

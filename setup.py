@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import setuptools
 
 with open('README.md', encoding='UTF-8') as fh:
@@ -6,10 +8,10 @@ with open('README.md', encoding='UTF-8') as fh:
 setuptools.setup(
     name="TGPhind",
 
-    version="0.1.2",
+    version="1.0.0",
 
     author="Nikita (NIKDISSV)",
-    author_email="nikdissv.forever@protonmail.com",
+    author_email="nikdissv@proton.me",
 
     description="Search for articles by title, in telegra.ph and its mirrors.",
     long_description=long_description,
@@ -26,5 +28,5 @@ setuptools.setup(
         'Operating System :: OS Independent',
     ],
 
-    python_requires='>=3.6',
+    python_requires='>=3.8',
 )
