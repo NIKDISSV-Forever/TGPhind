@@ -13,7 +13,7 @@ setuptools.setup(
     author="Nikita (NIKDISSV)",
     author_email="nikdissv@proton.me",
 
-    description="Search for articles by title, in telegra.ph and its mirrors.",
+    description="Development Status :: 5 - Production/Stable",
     long_description=long_description,
     long_description_content_type="text/markdown",
 
