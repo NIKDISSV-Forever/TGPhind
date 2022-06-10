@@ -13,7 +13,7 @@ setuptools.setup(
     author="Nikita (NIKDISSV)",
     author_email="nikdissv@proton.me",
 
-    description="Development Status :: 5 - Production/Stable",
+    description="Search for articles by title, in telegra.ph and its mirrors.",
     long_description=long_description,
     long_description_content_type="text/markdown",
 
@@ -22,8 +22,8 @@ setuptools.setup(
     packages=setuptools.find_packages(),
 
     classifiers=[
+        'Development Status :: 5 - Production/Stable',
         'Programming Language :: Python :: 3.9.7',
-        'Development Status :: 4 - Beta',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
